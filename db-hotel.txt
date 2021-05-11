@@ -1,0 +1,19 @@
+SELECT * FROM `ospiti`;
+
+SELECT * FROM `ospiti`
+ WHERE `document_type`= 'CI';
+
+SELECT * FROM `paganti`
+ WHERE `ospite_id` <> 'null';
+
+SELECT * FROM `stanze` 
+ WHERE `floor` = 1;
+
+SELECT * FROM `ospiti`
+ WHERE `name` LIKE 'E%';
+
+SELECT * FROM `ospiti`
+ WHERE YEAR(NOW()) - YEAR(date_of_birth) < 30;
+
+SELECT * FROM `prenotazioni`
+ WHERE `created_at` < '2018-05-01';
