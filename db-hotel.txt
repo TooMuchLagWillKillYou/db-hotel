@@ -1,19 +1,110 @@
-SELECT * FROM `ospiti`;
+/////////////////////////////////////////////////////////////////////////////
+ESERCIZIO 11/05
 
-SELECT * FROM `ospiti`
- WHERE `document_type`= 'CI';
+SELECT *
+ FROM `ospiti`;
 
-SELECT * FROM `paganti`
- WHERE `ospite_id` <> 'null';
+SELECT *
+ FROM `ospiti`
+  WHERE `document_type`= 'CI';
 
-SELECT * FROM `stanze` 
- WHERE `floor` = 1;
+SELECT *
+ FROM `paganti`
+  WHERE `ospite_id` <> 'null';
 
-SELECT * FROM `ospiti`
- WHERE `name` LIKE 'E%';
+SELECT *
+ FROM `stanze` 
+  WHERE `floor` = 1;
 
-SELECT * FROM `ospiti`
- WHERE YEAR(NOW()) - YEAR(date_of_birth) < 30;
+SELECT *
+ FROM `ospiti`
+  WHERE `name` LIKE 'E%';
 
-SELECT * FROM `prenotazioni`
- WHERE `created_at` < '2018-05-01';
+SELECT *
+ FROM `ospiti`
+  WHERE YEAR(NOW()) - YEAR(date_of_birth) < 30;
+
+SELECT *
+ FROM `prenotazioni`
+  WHERE `created_at` < '2018-05-01';
+
+/////////////////////////////////////////////////////////////////////////////
+ESERCIZIO 12/05
+
+SELECT YEAR(date_of_birth), COUNT(*)
+ FROM ospiti
+  GROUP BY YEAR(date_of_birth);
+
+SELECT status, SUM(price)
+ FROM pagamenti
+  GROUP BY status;
+
+SELECT stanza_id, COUNT(*)
+ FROM prenotazioni
+  GROUP BY stanza_id;
+
+SELECT HOUR(created_at), COUNT(*)
+ FROM prenotazioni
+  GROUP BY HOUR(created_at);
+(ore 3)
+
+SELECT ospite_id, COUNT(*)
+ FROM prenotazioni_has_ospiti
+  GROUP BY ospite_id;
+(tre prenotazioni)
+
+SELECT name, lastname, COUNT(prenotazioni_has_ospiti.ospite_id)
+ FROM prenotazioni_has_ospiti
+  JOIN ospiti
+  ON prenotazioni_has_ospiti.ospite_id = ospiti.id
+   GROUP BY prenotazioni_has_ospiti.ospite_id
+    HAVING COUNT(prenotazioni_has_ospiti.ospite_id) > 2;
+
+SELECT ospiti.name, ospiti.lastname, prenotazione_id
+ FROM prenotazioni_has_ospiti
+  JOIN ospiti
+  ON prenotazioni_has_ospiti.ospite_id = ospiti.id;
+
+SELECT ospiti.name, ospiti.lastname, pagamenti.price, paganti.name, paganti.lastname, prenotazioni.created_at
+ FROM ospiti
+  JOIN paganti
+  ON ospiti.id = paganti.ospite_id
+
+  JOIN pagamenti
+  ON paganti.id = pagamenti.pagante_id
+
+  JOIN prenotazioni
+  ON prenotazioni.id = pagamenti.prenotazione_id
+  
+   WHERE YEAR(prenotazioni.created_at) = '2018'
+   AND MONTH(prenotazioni.created_at) = '05';
+
+SELECT SUM(price)
+ FROM stanze
+  JOIN prenotazioni
+  ON stanze.id = prenotazioni.stanza_id
+
+  JOIN pagamenti
+  ON prenotazioni.id = pagamenti.prenotazione_id
+
+   WHERE floor = 1;
+
+SELECT prenotazioni.id, paganti.name, paganti.lastname, paganti.address
+ FROM prenotazioni
+
+  JOIN pagamenti
+  ON prenotazioni.id = pagamenti.prenotazione_id
+
+  JOIN paganti
+  ON pagamenti.pagante_id = paganti.id
+
+   WHERE prenotazioni.id = 7;
+
+SELECT * FROM stanze
+  LEFT JOIN prenotazioni
+  ON stanze.id = prenotazioni.stanza_id
+   WHERE prenotazioni.id IS NULL;
+
+
+
+
